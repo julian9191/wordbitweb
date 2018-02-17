@@ -1,17 +1,76 @@
+<?php
+
+$con = @mysqli_connect('localhost', 'root', '', 'wordbitweb');
+
+if (!$con) {
+    echo "Error: " . mysqli_connect_error();
+	exit();
+}
+
+// Some Query
+$sql 	= 'SELECT * FROM words order by idwords;';
+$query 	= mysqli_query($con, $sql);
+$palabras = [];
+$i=0;
+while ($row = mysqli_fetch_array($query))
+{
+	$palabras[$i]['idwords'] = $row['idwords'];
+	$palabras[$i]['english'] = utf8_encode($row['english']);
+	$palabras[$i]['pronunciation'] = utf8_encode($row['pronunciation']);
+	$palabras[$i]['sentence'] = utf8_encode($row['sentence']);
+	$palabras[$i]['spanish'] = utf8_encode($row['spanish']);
+	$palabras[$i]['used'] = $row['used'];
+	$palabras[$i]['group_id'] = $row['group_id'];
+	$palabras[$i]['created'] = $row['created'];
+	$palabras[$i]['modified'] = $row['modified'];
+	$palabras[$i]['isrepeat'] = $row['isrepeat'];
+	
+	$i++;
+}
+
+//echo json_encode($palabras);
+?>
 <html>
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Your Website</title>
+	<title>WordbitWeb</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 
 <body>
-	<section>
-		
-		<div id="boton"></div>
-		
-	</section>
+	<div class='container'>
+
+		<h1 style='text-align: center'>WordbitWeb</h1>
+
+		<table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>English</th>
+                <th>Pronunciation</th>
+                <th>Sentence</th>
+                <th>Spanish</th>
+              </tr>
+            </thead>
+            <tbody>
+            	<?php
+            		foreach ($palabras as &$palabra) {
+            			echo "<tr id='tr_".$palabra["idwords"]."'>
+            					<td>".$palabra["idwords"]."</td>
+            					<td>".$palabra["english"]."</td>
+            					<td>".$palabra["pronunciation"]."</td>
+            					<td>".$palabra["sentence"]."</td>
+            					<td>".$palabra["spanish"]."</td>
+            				</tr>";
+            		}
+
+            	?>
+            </tbody>
+          </table>
+	</div>
 	<script>
 		
 		var palabra = [];
@@ -20,37 +79,34 @@
 		
 		$(document).ready(function() {
 			var minutos = parseInt(prompt("Por favor seleccione el intervalo en minutos"));
-			mostrar(minutos*1000);
+			mostrar(minutos*60000);
 		});
 		
 		function mostrar(milisegundos){
-			//alert("111");
-			$("#boton").html("");
-			
+			mostrarPalabra();
 			setInterval(function(){ 
-			//alert("222");
-				
-				$.get("data.php", function(data, status){
-					var palabra = JSON.parse(data);
-					console.log(palabraAnterior["idwords"]+", "+palabra["idwords"]);
-					if(palabraAnterior["idwords"] != palabra["idwords"] || palabra["isrepeat"]==1){
-						
-						palabraAnterior = palabra;
-						
-						var texto = palabra['english']+" ("+palabra['pronunciation']+"): "+palabra['spanish'];
-				
-						
-						var myWindow = window.open("word.php?idwords="+palabra['idwords']+"&english="+palabra['english']+"&pronunciation="+palabra['pronunciation']+"&spanish="+palabra['spanish']+"&sentence="+palabra['sentence'], "", "width=1000, height=500");   // Opens a new window
-						myWindow.focus(); 
-					}
-					
-				});
-				
-
-				
+				mostrarPalabra();
 				 
 			}, milisegundos);
 			
+		}
+		
+		function mostrarPalabra(){
+			$.get("data.php", function(data, status){
+				var palabra = JSON.parse(data);
+				console.log(palabraAnterior["idwords"]+", "+palabra["idwords"]);
+				if(palabraAnterior["idwords"] != palabra["idwords"] || palabra["isrepeat"]==1){
+					
+					palabraAnterior = palabra;
+					
+					var texto = palabra['english']+" ("+palabra['pronunciation']+"): "+palabra['spanish'];
+			
+					$("#tr_"+palabra['idwords']).css("background-color", "yellow");
+					var myWindow = window.open("word.php?idwords="+palabra['idwords']+"&english="+palabra['english']+"&pronunciation="+palabra['pronunciation']+"&spanish="+palabra['spanish']+"&sentence="+palabra['sentence'], "", "width=1000, height=500");   // Opens a new window
+					myWindow.focus(); 
+				}
+				
+			});
 		}
 		
 	</script>
@@ -58,3 +114,10 @@
 </body>
 
 </html>
+
+<?php
+
+// Close connection
+mysqli_close ($con);
+
+?>
