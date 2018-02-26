@@ -38,6 +38,12 @@ while ($row = mysqli_fetch_array($query))
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+	<style>
+		.resaltar{
+			background-color: yellow !important; 
+		}
+	</style>
+
 </head>
 
 <body>
@@ -58,7 +64,7 @@ while ($row = mysqli_fetch_array($query))
             <tbody>
             	<?php
             		foreach ($palabras as &$palabra) {
-            			echo "<tr id='tr_".$palabra["idwords"]."'>
+            			echo "<tr id='tr_".$palabra["idwords"]."' class='fila'>
             					<td>".$palabra["idwords"]."</td>
             					<td>".$palabra["english"]."</td>
             					<td>".$palabra["pronunciation"]."</td>
@@ -97,12 +103,12 @@ while ($row = mysqli_fetch_array($query))
 				console.log(palabraAnterior["idwords"]+", "+palabra["idwords"]);
 				if(palabraAnterior["idwords"] != palabra["idwords"] || palabra["isrepeat"]==1){
 					
-					palabraAnterior = palabra;
-					
 					var texto = palabra['english']+" ("+palabra['pronunciation']+"): "+palabra['spanish'];
-			
-					$("#tr_"+palabra['idwords']).css("background-color", "yellow");
-					var myWindow = window.open("word.php?idwords="+palabra['idwords']+"&english="+palabra['english']+"&pronunciation="+palabra['pronunciation']+"&spanish="+palabra['spanish']+"&sentence="+palabra['sentence'], "", "width=1000, height=500");   // Opens a new window
+					$("#tr_"+palabraAnterior['idwords']).removeClass( "resaltar" );
+					$("#tr_"+palabra['idwords']).addClass( "resaltar" );
+					palabraAnterior = palabra;
+
+					var myWindow = window.open("word.php?idwords="+palabra['idwords']+"&english="+palabra['english']+"&pronunciation="+palabra['pronunciation']+"&spanish="+palabra['spanish']+"&sentence="+palabra['sentence'], "", "width=1000, height=600");   // Opens a new window
 					myWindow.focus(); 
 				}
 				

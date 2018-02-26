@@ -10,7 +10,6 @@
 <body>
 	<div class='container'>
 		<div style='text-align: center; color: red;'>
-			<br>
 			<div class='jumbotron'>
 				<?php
 					$idwords = $_GET["idwords"];
@@ -19,9 +18,12 @@
 					$spanish = $_GET["spanish"];
 					$sentence = $_GET["sentence"];
 
-					$texto = $english." (".$pronunciation."): ".$spanish;
 					echo "<p>$idwords</p>";
-					echo "<h1 style='font-size: 3em;'>".$texto."</h1><h2>".$sentence."</h2>";
+					echo "<h2 style='font-size: 3em;'>".$spanish."</h2>
+							<input class='btn btn-lg btn-primary' type='button' value='Mostrar' onclick='mostrar()' />
+							<div id='english-div'>
+							<h1>".$english." (".$pronunciation.")</h1>
+							<h2>".$sentence."</h2></div>";
 				?>
 			</div>
 			
@@ -33,14 +35,30 @@
 		
 	</div>
 	<script>
+
+		$(document).ready(function(){
+		    $("#english-div").hide();
+		});
 		
 		var idWord = <?php echo $idwords; ?>;
+		var visible = false;
 		
 		
 		function marcarPalabra(repetir){
 			$.get("update.php?idwords="+idWord+"&repeat="+repetir, function(data, status){
 				window.close();
 			});
+		}
+
+		function mostrar(){
+			if(visible){
+				$("#english-div").hide();
+				visible = false;
+			}else{
+				$("#english-div").show();
+				visible = true;
+			}
+			
 		}
 		
 		
