@@ -15,10 +15,10 @@ $i=0;
 while ($row = mysqli_fetch_array($query))
 {
 	$palabras['idwords'] = $row['idwords'];
-	$palabras['english'] = utf8_encode($row['english']);
-	$palabras['pronunciation'] = utf8_encode($row['pronunciation']);
-	$palabras['sentence'] = utf8_encode($row['sentence']);
-	$palabras['spanish'] = utf8_encode($row['spanish']);
+	$palabras['english'] = $row['english'];
+	$palabras['pronunciation'] = $row['pronunciation'];
+	$palabras['sentence'] = $row['sentence'];
+	$palabras['spanish'] = $row['spanish'];
 	$palabras['used'] = $row['used'];
 	$palabras['group_id'] = $row['group_id'];
 	$palabras['created'] = $row['created'];
