@@ -1,11 +1,6 @@
 <?php
 
-$con = @mysqli_connect('localhost', 'root', '', 'wordbitweb');
-
-if (!$con) {
-    echo "Error: " . mysqli_connect_error();
-	exit();
-}
+require_once("conexion.php");
 
 // Some Query
 $sql 	= 'SELECT w.* FROM words w where w.idwords <= (SELECT w2.idwords FROM words w2 order by w2.used, w2.idwords limit 1) order by w.used;';
@@ -26,7 +21,7 @@ while ($row = mysqli_fetch_array($query))
 	$palabras[$i]['isrepeat'] = $row['isrepeat'];
 	$i++;
 }
-
+header('Content-Type: application/javascript');
 echo $_GET['callback'].'('.json_encode($palabras).')' ;
 mysqli_close ($con);
 

@@ -3,12 +3,7 @@
 $idword = $_GET["idwords"];
 $repeat = $_GET["repeat"];
 
-$con = @mysqli_connect('localhost', 'root', '', 'wordbitweb');
-
-if (!$con) {
-    echo "Error: " . mysqli_connect_error();
-	exit();
-}
+require_once("conexion.php");
 
 // Some Query
 $sql = "UPDATE words SET used = now() WHERE idwords = '".$idword."';";

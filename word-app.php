@@ -22,11 +22,8 @@ while ($row = mysqli_fetch_array($query))
 	
 }
 
-$sql 	= "UPDATE words SET isrepeat = 0 WHERE idwords = '".$palabras['idwords']."';";
-$query 	= mysqli_query($con, $sql);
-
-echo json_encode($palabras);
-// Close connection
+header('Content-Type: application/javascript');
+echo $_GET['callback'].'('.json_encode($palabras).')' ;
 mysqli_close ($con);
 
 
