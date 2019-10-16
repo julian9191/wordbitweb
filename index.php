@@ -7,6 +7,12 @@ $sql 	= 'SELECT * FROM words order by idwords;';
 $query 	= mysqli_query($con, $sql);
 $palabras = [];
 $i=0;
+
+if (!$query) {
+    printf("Error: %s\n", mysqli_error($con));
+    exit();
+}
+
 while ($row = mysqli_fetch_array($query))
 {
 	$palabras[$i]['idwords'] = $row['idwords'];
